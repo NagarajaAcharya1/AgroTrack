@@ -32,9 +32,12 @@ const io = new Server(server, {
 // -------------------- Middlewares --------------------
 app.use(cors({
     origin: [
-        "https://agrotrack-frontend.onrender.com"
+        "https://agrotrack-frontend.onrender.com",
+        "http://localhost:5173",
+        "http://localhost:5000",
+        /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}:5173$/ // Match local network IPs
     ],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 
