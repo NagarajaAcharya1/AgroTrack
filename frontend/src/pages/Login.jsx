@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Sprout, Lock, Mail, AlertCircle, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Login = () => {
         setSuccessMsg('');
 
         try {
-            const endpoint = isLogin ? 'http://localhost:5000/api/login' : 'http://localhost:5000/api/register';
+            const endpoint = isLogin ? `${API_BASE_URL}/api/login` : `${API_BASE_URL}/api/register`;
             const res = await axios.post(endpoint, formData);
 
             if (isLogin) {
