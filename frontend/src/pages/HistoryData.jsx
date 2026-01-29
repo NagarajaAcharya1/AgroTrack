@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Calendar, Search, Download } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
+import { API_BASE_URL } from '../config';
 
 const HistoryData = () => {
     const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const HistoryData = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const res = await axios.get('http://localhost:5000/api/sensor-data');
+            const res = await axios.get(`${API_BASE_URL}/api/sensor-data`);
             // Assuming API returns array of objects
             setData(res.data);
         } catch (err) {

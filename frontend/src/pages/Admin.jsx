@@ -8,6 +8,7 @@ import {
     ArrowLeft,
     RefreshCw
 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const Admin = () => {
     const navigate = useNavigate();
@@ -21,9 +22,9 @@ const Admin = () => {
         try {
             // Parallel data fetching
             const [statsRes, alertsRes, dataRes] = await Promise.all([
-                fetch('http://localhost:5000/api/admin/stats'),
-                fetch('http://localhost:5000/api/alerts?limit=5'),
-                fetch('http://localhost:5000/api/sensor-data?limit=10')
+                fetch(`${API_BASE_URL}/api/admin/stats`),
+                fetch(`${API_BASE_URL}/api/alerts?limit=5`),
+                fetch(`${API_BASE_URL}/api/sensor-data?limit=10`)
             ]);
 
             const statsData = await statsRes.json();

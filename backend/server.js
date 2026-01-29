@@ -32,7 +32,10 @@ const io = new Server(server, {
 // -------------------- Middlewares --------------------
 app.use(cors({
     origin: [
-        "https://agrotrack-frontend.onrender.com"
+        "https://agrotrack-frontend.onrender.com",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:3000"
     ],
     methods: ["GET", "POST"],
     credentials: true
@@ -144,12 +147,16 @@ app.post('/api/sensor-data', async (req, res) => {
 app.get('/api/sensor-data', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 20;
+        console.log('Fetching sensor data with limit:', limit);
+        
         const data = await SensorData.find()
             .sort({ timestamp: -1 })
             .limit(limit);
-
+            
+        console.log('Found sensor data records:', data.length);
         res.json(data);
     } catch (err) {
+        console.error('Error fetching sensor data:', err);
         res.status(500).json({ error: err.message });
     }
 });
@@ -225,7 +232,7 @@ if (process.env.ENABLE_SIMULATOR === 'true') {
 }
 
 // -------------------- Server Start --------------------
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
     console.log(`🚀 AgroTrack server running on port ${PORT}`);

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { io } from 'socket.io-client';
+import { API_BASE_URL } from '../config';
 import { Line, Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -41,9 +43,27 @@ const Dashboard = () => {
     const [isConnected, setIsConnected] = useState(false);
     const [history, setHistory] = useState([]);
 
+    // Fetch initial data
+    useEffect(() => {
+        const fetchHistory = async () => {
+            try {
+                const res = await axios.get(`${API_BASE_URL}/api/sensor-data?limit=20`);
+                // Reverse to show oldest to newest in chart
+                const data = res.data.reverse();
+                setHistory(data);
+                if (data.length > 0) {
+                    setSensorData(data[data.length - 1]);
+                }
+            } catch (err) {
+                console.error("Failed to fetch history:", err);
+            }
+        };
+        fetchHistory();
+    }, []);
+
     // Socket Connection
     useEffect(() => {
-        const socket = io('http://localhost:5000');
+        const socket = io(API_BASE_URL);
 
         socket.on('connect', () => {
             setIsConnected(true);
