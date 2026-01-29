@@ -12,6 +12,12 @@ let currentHumidity = 50;
 let currentBattery = 100;
 
 const simulateData = async (io) => {
+    // Check if MongoDB is connected before trying to save data
+    if (mongoose.connection.readyState !== 1) {
+        console.log('⚠️ MongoDB not ready, skipping simulation');
+        return;
+    }
+
     // Drift values naturally
     currentTemp += random(-1, 1);
     if (currentTemp < 10) currentTemp = 10;

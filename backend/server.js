@@ -40,8 +40,21 @@ app.use(cors({
 app.use(express.json());
 
 // -------------------- Database Connection --------------------
+let isMongoConnected = false;
+
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB Atlas Connected'))
+    .then(() => {
+        console.log('✅ MongoDB Atlas Connected');
+        isMongoConnected = true;
+        
+        // Start simulator only after MongoDB is connected
+        if (process.env.ENABLE_SIMULATOR === 'true') {
+            console.log('🧪 Sensor simulator enabled');
+            setInterval(() => {
+                simulateData(io);
+            }, 5000);
+        }
+    })
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 // -------------------- Health Check --------------------
@@ -219,13 +232,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// -------------------- Simulator Control --------------------
-if (process.env.ENABLE_SIMULATOR === 'true') {
-    console.log('🧪 Sensor simulator enabled');
-    setInterval(() => {
-        simulateData(io);
-    }, 5000);
-}
+
 
 // -------------------- Server Start --------------------
 const PORT = process.env.PORT || 3001;
